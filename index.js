@@ -8,7 +8,7 @@ const app = express(); // Generate a running express app
 //    .delete   -> Delete something
 //    .patch    -> Update one or two properties of something
 app.get('/', (req, res) => {
-    res.send({hey: 'you'});
+    res.send({bye: 'friend'});
 });
 
 // Set port number injected in the environment (Production / Development)
