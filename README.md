@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # E-Survey
-=======
-# survey-app
->>>>>>> 5bfaa937ce499552a237ec408642866783aff603
 ## Deployment Checklist
 - **Dynamic Port Binding**: Heroku tells us which port our app will use, so we listen to that
 - **Specify Node Environment**: We want to use a specific version of node, so we need to tell Heroku which version we want
