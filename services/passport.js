@@ -29,20 +29,25 @@ passport.use(
     new GoogleStrategy({
         clientID: keys.googleClientID,
         clientSecret: keys.googleClientSecret,
-        callbackURL: '/auth/google/callback'
+        callbackURL: '/auth/google/callback',
+        proxy: true // Trust the proxy to calculate callback URL correctly
     }, 
     (accessToken, refreshToken, profile, done) => { // Google strategy callback function
         // Make query to MongoDB (asynchronous, returns a promise)
-        User.findOne({ googleID: profile.id }).then((existingUser) => {
-            if (existingUser){
-                done(null, existingUser); // Tell passport that we're done
-            }
-            else{
-                // Create model instance -> record
-                new User({ googleID: profile.id })
-                    .save() // Take the instance and save it to DB
-                    .then((user) => done(null, user));
-            }
-        });
+        User.findOne({ googleID: profile.id })
+            .then((existingUser) => {
+                if (existingUser){
+                    done(null, existingUser); // Tell passport that we're done
+                }
+                else{
+                    // Create model instance -> record
+                    new User({ googleID: profile.id })
+                        .save() // Take the instance and save it to DB
+                        .then((user) => done(null, user));
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     })
 );
