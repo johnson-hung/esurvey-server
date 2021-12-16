@@ -1,8 +1,13 @@
 // Get access to the express library
 const express = require('express'); 
+const mongoose = require('mongoose');
+const keys = require('./config/keys');
 
 // Simply import passport
 require('./services/passport');
+
+// Connect Mongoose to MongoDB
+mongoose.connect(keys.mongoURI);
 
 // Generate a running express app
 const app = express(); 
