@@ -5,6 +5,11 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy; 
 const keys = require('../config/keys');
 
+const mongoose = require('mongoose');
+
+// Model class -> collection
+const User = mongoose.model('users');
+
 // Set configuration for google strategy
 passport.use(
     new GoogleStrategy({
@@ -13,9 +18,17 @@ passport.use(
         callbackURL: '/auth/google/callback'
     }, 
     (accessToken, refreshToken, profile, done) => {
-        console.log('User authenticated');
-        console.log('accessToken:', accessToken);
-        console.log('refreshToken:', refreshToken);
-        console.log('profile:', profile);
+        // Make query to MongoDB (asynchronous, returns a promise)
+        User.findOne({ googleID: profile.id }).then((existingUser) => {
+            if (existingUser){
+                done(null, existingUser); // Tell passport that we're done
+            }
+            else{
+                // Create model instance -> record
+                new User({ googleID: profile.id })
+                    .save() // Take the instance and save it to DB
+                    .then((user) => done(null, user));
+            }
+        });
     })
 );

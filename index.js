@@ -1,9 +1,9 @@
 // Get access to the express library
-const express = require('express'); 
+const express = require('express');
+
 const mongoose = require('mongoose');
 const keys = require('./config/keys');
-
-// Simply import passport
+require('./models/user');
 require('./services/passport');
 
 // Connect Mongoose to MongoDB
@@ -18,5 +18,5 @@ require('./routes/authRoutes')(app);
 // Set port number injected in the environment (Production / Development)
 const PORT = process.env.PORT || 5001; 
 
-// Instruct express to tell node to listen to given port
-app.listen(PORT); 
+// Instruct express to tell node to listen to the given port
+app.listen(PORT);
