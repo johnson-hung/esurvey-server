@@ -32,22 +32,17 @@ passport.use(
         callbackURL: '/auth/google/callback',
         proxy: true // Trust the proxy to calculate callback URL correctly
     }, 
-    (accessToken, refreshToken, profile, done) => { // Google strategy callback function
+    async (accessToken, refreshToken, profile, done) => { // Google strategy callback function
         // Make query to MongoDB (asynchronous, returns a promise)
-        User.findOne({ googleID: profile.id })
-            .then((existingUser) => {
-                if (existingUser){
-                    done(null, existingUser); // Tell passport that we're done
-                }
-                else{
-                    // Create model instance -> record
-                    new User({ googleID: profile.id })
-                        .save() // Take the instance and save it to DB
-                        .then((user) => done(null, user));
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        const existingUser = await User.findOne({ googleID: profile.id });
+            
+        if (existingUser){
+            // Tell passport that we're done
+            return done(null, existingUser);
+        }
+        
+        // Create model instance -> record
+        const user = await new User({ googleID: profile.id }).save(); // Take the instance and save it to DB
+        done(null, user);
     })
 );
