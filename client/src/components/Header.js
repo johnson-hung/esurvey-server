@@ -13,8 +13,8 @@ class Header extends Component{
                 return <li><a href='/auth/google'>Login With Google</a></li>;
             default:
                 return [
-                    <li><Payments /></li>,
-                    <li><a href='/api/logout'>Logout</a></li>
+                    <li key="1"><Payments /></li>,
+                    <li key="2"><a href='/api/logout'>Logout</a></li>
                 ];
         }
     }
@@ -29,9 +29,7 @@ class Header extends Component{
                         E-Survey
                     </Link>
                     <ul className="right">
-                        <li>
-                            {this.renderContent()}
-                        </li>
+                        {this.renderContent()}
                     </ul>
                 </div>
             </nav>
