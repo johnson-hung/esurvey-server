@@ -25,6 +25,7 @@ app.use(passport.session());
 
 // 'require' returns a function, and we immediately call it with the app object
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 // Set port number injected in the environment (Production / Development)
 const PORT = process.env.PORT || 5001; 
