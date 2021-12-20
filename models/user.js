@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose; // Destruction
 
 const userSchema = new Schema({
-    googleID: String
+    googleID: String,
+    credits: { type: Number, default: 0 }
 });
 
 // Create new collection called 'users' if it doesn't exist
