@@ -41,6 +41,18 @@ class SurveyForm extends Component{
     }
 }
 
+// Validate values contained in the fields
+function validate(values){
+    const errors = {};
+    _.each(FIELDS, ({ name }) => {
+        if (!values[name]){
+            errors[name] = '*No value provided*';
+        }
+    });
+    return errors;
+}
+
 export default reduxForm({
+    validate,
     form: 'surveyForm'
 })(SurveyForm);
