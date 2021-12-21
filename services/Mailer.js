@@ -7,6 +7,7 @@ class Mailer extends helper.Mail{
     constructor({subject, recipients}, content){
         super(); // Make sure that the constructor gets executed
 
+        this.sendGridAPI = sendgrid(keys.sendGridKey);
         this.from_email = new helper.Email('jhcc.gamedev@gmail.com');
         this.subject = subject;
         this.body = new helper.Content('text/html', content);
@@ -29,6 +30,26 @@ class Mailer extends helper.Mail{
 
         trackingSettings.setClickTracking(clickTracking);
         this.addTrackingSettings(trackingSettings);
+    }
+
+    addRecipients(){
+        const personalize = new helper.Personalization();
+        this.recipients.forEach(recipient => {
+            personalize.addTo(recipient);
+        });
+        this.addPersonalization(personalize);
+    }
+
+    // Send the mailer to SendGrid
+    async send(){
+        const request = this.sendGridAPI.emptyRequest({
+            method: 'POST',
+            path: '/v3/mail/send',
+            body: this.toJSON()
+        });
+
+        const response = await this.sendGridAPI.API(request);
+        return response;
     }
 }
 

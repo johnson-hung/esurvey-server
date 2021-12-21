@@ -11,6 +11,10 @@ import reduxThunk from 'redux-thunk';
 import App from './components/App'
 import reducers from './reducers';
 
+// For development and testing
+import axios from 'axios';
+window.axios = axios;
+
 // Set up redux store which stores all the states
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
