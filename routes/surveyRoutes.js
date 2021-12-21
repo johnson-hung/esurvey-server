@@ -21,6 +21,19 @@ module.exports = app => {
 
         // Send an email
         const mailer = new Mailer(survey, surveyTemplate(survey));
-        await mailer.send();
+        try{
+            await mailer.send();
+
+            // Save the survey and the updated user credits
+            await survey.save();
+            req.user.credits -= 1;
+            const user = await req.user.save();
+    
+            // Send user back so as to update components
+            res.send(user);
+        }
+        catch(err){
+            res.status(422).send(err);
+        }
     });
 };
