@@ -10,7 +10,7 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
-    app.get('/api/surveys/thankyou', (req, res) => {
+    app.get('/api/surveys/:surveyId/:choice', (req, res) => {
         res.send('Thank you for your input!');
     });
 
@@ -18,7 +18,7 @@ module.exports = app => {
         // Extract necessary data like email, surveyId, and choice
         const p = new Path('/api/surveys/:surveyId/:choice');
 
-        const events = _.chain(req.body)
+        _.chain(req.body)
             .map(({ email, url }) => {
                 const match = p.test(new URL(url).pathname);
                 if (match){
@@ -27,9 +27,20 @@ module.exports = app => {
             })
             .compact() // Remove elements that are undefined
             .uniqBy('email', 'surveyId')
+            .each(({ surveyId, email, choice }) => {
+                Survey.updateOne({
+                    _id: surveyId,
+                    recipients: {
+                        $elemMatch: { email: email, responded: false }
+                    }
+                },  {
+                        $inc: { [choice]: 1 },
+                        $set: { 'recipients.$.responded': true },
+                        lastResponded: new Date()
+                }).exec(); // Make sure we actually send the query to DB
+            })
             .value();
         
-        console.log(events);
         res.send({});
     });
     
