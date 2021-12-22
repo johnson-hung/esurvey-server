@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom';
 // Allows components to communicate with the redux store
 import { reduxForm, Field } from 'redux-form';
 
-import SurveyField from "./SurveyField";
+import SurveyField from './SurveyField';
+import validateEmails from '../../utils/validateEmails';
 
 const FIELDS = [
     { label: 'Survey Title', name: 'title'},
@@ -44,6 +45,8 @@ class SurveyForm extends Component{
 // Validate values contained in the fields
 function validate(values){
     const errors = {};
+    errors.emails = validateEmails(values.emails || '');
+
     _.each(FIELDS, ({ name }) => {
         if (!values[name]){
             errors[name] = '*No value provided*';
